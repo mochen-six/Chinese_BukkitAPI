@@ -58,7 +58,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the complete block data for this block
      *
-     * @return block specific data
+     * @return 方块的BlockData
      */
     @NotNull
     BlockData getBlockData();
@@ -69,10 +69,10 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the block at the given offsets
      *
-     * @param modX X-coordinate offset
-     * @param modY Y-coordinate offset
-     * @param modZ Z-coordinate offset
-     * @return Block at the given offsets
+     * @param modX X方向的偏移量
+     * @param modY Y方向的偏移量
+     * @param modZ Z方向的偏移量
+     * @return 在此偏移位置的方块
      */
     @NotNull
     Block getRelative(int modX, int modY, int modZ);
@@ -87,8 +87,8 @@ public interface Block extends Metadatable {
      * <p>
      * This method is equal to getRelative(face, 1)
      *
-     * @param face Face of this block to return
-     * @return Block at the given face
+     * @param face 哪一面
+     * @return 挨着此方块face面的方块
      * @see #getRelative(BlockFace, int)
      */
     @NotNull
@@ -115,9 +115,9 @@ public interface Block extends Metadatable {
      * shower.setType(Material.WATER);
      * </pre>
      *
-     * @param face Face of this block to return
-     * @param distance Distance to get the block at
-     * @return Block at the given face
+     * @param face 哪一面
+     * @param distance 从face面延伸的距离
+     * @return 此方块face面distance距离的方块
      */
     @NotNull
     Block getRelative(@NotNull BlockFace face, int distance);
@@ -128,7 +128,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the type of this block
      *
-     * @return block type
+     * @return 方块的类型
      */
     @NotNull
     Material getType();
@@ -141,7 +141,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the light level between 0-15
      *
-     * @return light level
+     * @return 此方块的亮度等级
      */
     byte getLightLevel();
 
@@ -156,7 +156,7 @@ public interface Block extends Metadatable {
      * Any light given from other sources (such as blocks like torches) will
      * be ignored.
      *
-     * @return Sky light level
+     * @return 来自天空的亮度等级
      */
     byte getLightFromSky();
 
@@ -170,7 +170,7 @@ public interface Block extends Metadatable {
      * <p>
      * Any light given from other sources (such as the sun) will be ignored.
      *
-     * @return Block light level
+     * @return 来自方块的亮度等级
      */
     byte getLightFromBlocks();
 
@@ -180,7 +180,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the world which contains this Block
      *
-     * @return World containing this block
+     * @return 包含此方块的世界
      */
     @NotNull
     World getWorld();
@@ -191,7 +191,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the x-coordinate of this block
      *
-     * @return x-coordinate
+     * @return X坐标
      */
     int getX();
 
@@ -201,7 +201,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the y-coordinate of this block
      *
-     * @return y-coordinate
+     * @return Y坐标
      */
     int getY();
 
@@ -211,7 +211,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the z-coordinate of this block
      *
-     * @return z-coordinate
+     * @return z坐标
      */
     int getZ();
 
@@ -221,7 +221,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the Location of the block
      *
-     * @return Location of block
+     * @return 此方块的位置
      */
     @NotNull
     Location getLocation();
@@ -257,7 +257,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Gets the chunk which contains this block
      *
-     * @return Containing Chunk
+     * @return 包含此方块的区块
      */
     @NotNull
     Chunk getChunk();
@@ -268,7 +268,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Sets the complete data for this block
      *
-     * @param data new block specific data
+     * @param data 新的BlockData
      */
     void setBlockData(@NotNull BlockData data);
 
@@ -297,8 +297,8 @@ public interface Block extends Metadatable {
      * triggered at a later point. If this occurs, the resulting behavior is
      * undefined.
      *
-     * @param data new block specific data
-     * @param applyPhysics false to cancel physics from the changed block
+     * @param data 新的BlockData
+     * @param applyPhysics 物理系统是否应用在此方块上
      */
     void setBlockData(@NotNull BlockData data, boolean applyPhysics);
 
@@ -308,7 +308,7 @@ public interface Block extends Metadatable {
      * 原文:
      * Sets the type of this block
      *
-     * @param type Material to change this block to
+     * @param type 新的Material
      */
     void setType(@NotNull Material type);
 
@@ -337,12 +337,24 @@ public interface Block extends Metadatable {
      * triggered at a later point. If this occurs, the resulting behavior is
      * undefined.
      *
-     * @param type Material to change this block to
-     * @param applyPhysics False to cancel physics on the changed block.
+     * @param type 新的Material
+     * @param applyPhysics 物理系统是否应用在此方块上
      */
     void setType(@NotNull Material type, boolean applyPhysics);
 
     /**
+     * 获取给定的方块在此方块的哪一面.
+     * <p>
+     * 一个例子:
+     * <pre>{@code
+     * Block current = world.getBlockAt(100, 100, 100);
+     * Block target = world.getBlockAt(100, 101, 100);
+     *
+     * current.getFace(target) == BlockFace.Up;
+     * }</pre>
+     * <br>
+     * 如果给定的方块不在此方块的旁边，则可能返回null.
+     * 原文:
      * Gets the face relation of this block compared to the given block.
      * <p>
      * For example:
@@ -355,62 +367,89 @@ public interface Block extends Metadatable {
      * <br>
      * If the given block is not connected to this block, null may be returned
      *
-     * @param block Block to compare against this block
-     * @return BlockFace of this block which has the requested block, or null
+     * @param block 进行判断的方块
+     * @return 给定块挨着的那一面，或者null
      */
     @Nullable
     BlockFace getFace(@NotNull Block block);
 
     /**
+     * 获取此方块的BlockState，然后你可以把这个BlockState转换为其他类型，例如Furnace或Sign。
+     * <p>
+     * 返回的对象永远不会更新，捕获后的状态可能不会与当前方块的状态一致.
+     * <p>
+     * 原文:
      * Captures the current state of this block. You may then cast that state
      * into any accepted type, such as Furnace or Sign.
      * <p>
      * The returned object will never be updated, and you are not guaranteed
      * that (for example) a sign is still a sign after you capture its state.
      *
-     * @return BlockState with the current state of this block.
+     * @return 具有此方块当前状态的BlockState
      */
     @NotNull
     BlockState getState();
 
     /**
+     * 获取此方块的生物群系.
+     * <p>
+     * 原文:
      * Returns the biome that this block resides in
      *
-     * @return Biome type containing this block
+     * @return 此方块的生物群系
      */
     @NotNull
     Biome getBiome();
 
     /**
+     * 设置此方块的生物群系.
+     * <p>
+     * 原文:
      * Sets the biome that this block resides in
      *
-     * @param bio new Biome type for this block
+     * @param bio 此方块的新生物群系
      */
     void setBiome(@NotNull Biome bio);
 
     /**
+     * 获取此方块是否被红石充能.
+     * <p>
+     * 原文:
      * Returns true if the block is being powered by Redstone.
      *
-     * @return True if the block is powered.
+     * @return 如果此方块被红石充能，返回true
      */
     boolean isBlockPowered();
 
     /**
+     * 获取此方块是否被红石间接充能.
+     * <p>
+     * (译者注: 按钮 铁块 活塞 ,按钮按下，铁块被充能，则活塞被间接充能)
+     * <p>
+     * 原文:
      * Returns true if the block is being indirectly powered by Redstone.
      *
-     * @return True if the block is indirectly powered.
+     * @return 如果此方块被间接充能，返回true
      */
     boolean isBlockIndirectlyPowered();
 
     /**
+     * 获取此方块的某一面是否被红石充能.
+     * <p>
+     * 原文:
      * Returns true if the block face is being powered by Redstone.
      *
-     * @param face The block face
-     * @return True if the block face is powered.
+     * @param face 哪一面
+     * @return 如果这一面被充能，返回true
      */
     boolean isBlockFacePowered(@NotNull BlockFace face);
 
     /**
+     * 获取此方块的某一面是否被红石间接充能.
+     * <p>
+     * (译者注: 按钮 铁块 活塞 ,按钮按下，铁块被充能，则活塞的左面被间接充能)
+     * <p>
+     * 原文:
      * Returns true if the block face is being indirectly powered by Redstone.
      *
      * @param face The block face
@@ -419,22 +458,33 @@ public interface Block extends Metadatable {
     boolean isBlockFaceIndirectlyPowered(@NotNull BlockFace face);
 
     /**
+     * 获取此方块某一面的红石充能等级.
+     * <p>
+     * 原文:
      * Returns the redstone power being provided to this block face
      *
      * @param face the face of the block to query or BlockFace.SELF for the
      *     block itself
-     * @return The power level.
+     * @return 充能等级
      */
     int getBlockPower(@NotNull BlockFace face);
 
     /**
+     * 获取此方块的红石充能等级.
+     * <p>
+     * 原文:
      * Returns the redstone power being provided to this block
      *
-     * @return The power level.
+     * @return 充能等级
      */
     int getBlockPower();
 
     /**
+     * 检查此方块是不是空气.
+     * <p>
+     * 即{@link #getType()} 返回 {@link Material#AIR}.
+     * <p>
+     * 原文:
      * Checks if this block is empty.
      * <p>
      * A block is considered empty when {@link #getType()} returns {@link
@@ -445,12 +495,19 @@ public interface Block extends Metadatable {
     boolean isEmpty();
 
     /**
+     * 检查此方块是不是流体(水或岩浆等).
+     * <p>
+     * 即{@link #getType()} 返回 {@link Material#WATER} 或 {@link Material#LAVA}.
+     * <p>
+     * (译者注: 也有可能是mod流体)
+     * <p>
+     * 原文:
      * Checks if this block is liquid.
      * <p>
      * A block is considered liquid when {@link #getType()} returns {@link
      * Material#WATER} or {@link Material#LAVA}.
      *
-     * @return true if this block is liquid
+     * @return 如果此方块是流体，返回true
      */
     boolean isLiquid();
 
@@ -472,49 +529,67 @@ public interface Block extends Metadatable {
     double getHumidity();
 
     /**
+     * 获取当此方块被活塞移动时的反应.
+     * <p>
+     * 原文:
      * Returns the reaction of the block when moved by a piston
      *
-     * @return reaction
+     * @return 此方块的反应
      */
     @NotNull
     PistonMoveReaction getPistonMoveReaction();
 
     /**
+     * 模拟玩家破坏此方块并掉落物品.
+     * <p>
+     * 原文:
      * Breaks the block and spawns items as if a player had digged it regardless
      * of the tool.
      *
-     * @return true if the block was destroyed
+     * @return 如果此方块被破坏，返回true
      */
     boolean breakNaturally();
 
     /**
+     * 模拟玩家使用某工具破坏此方块并掉落物品.
+     * <p>
+     * 原文:
      * Breaks the block and spawns items as if a player had digged it with a
      * specific tool
      *
-     * @param tool The tool or item in hand used for digging
-     * @return true if the block was destroyed
+     * @param tool 用来破坏的工具或物品
+     * @return 如果此方块被破坏，返回true
      */
     boolean breakNaturally(@Nullable ItemStack tool);
 
     /**
+     * 返回如果被打破，此方块掉落的物品.
+     * <p>
+     * 原文:
      * Returns a list of items which would drop by destroying this block
      *
-     * @return a list of dropped items for this type of block
+     * @return 一个包含掉落物品的Collection
      */
     @NotNull
     Collection<ItemStack> getDrops();
 
     /**
+     * 返回如果被指定的工具打破，此方块掉落的物品.
+     * <p>
+     * 原文:
      * Returns a list of items which would drop by destroying this block with
      * a specific tool
      *
-     * @param tool The tool or item in hand used for digging
-     * @return a list of dropped items for this type of block
+     * @param tool 用来破坏的工具或物品
+     * @return 一个包含掉落物品的Collection
      */
     @NotNull
     Collection<ItemStack> getDrops(@Nullable ItemStack tool);
 
     /**
+     * 返回如果被指定的实体用指定的工具打破，此方块掉落的物品.
+     * <p>
+     * 原文:
      * Returns a list of items which would drop by the entity destroying this
      * block with a specific tool
      *
@@ -526,6 +601,13 @@ public interface Block extends Metadatable {
     Collection<ItemStack> getDrops(@NotNull ItemStack tool, @Nullable Entity entity);
 
     /**
+     * 检测玩家能不能穿过此方块.
+     * <p>
+     * 如果一个方块没有碰撞箱，玩家就可能穿过它.
+     * <p>
+     * 比如高丛草、花和牌子等。但是打开的门、栅栏门、活板门(地毯等)就不是，因为它们仍然有可以碰撞的部分.
+     * <p>
+     * 原文:
      * Checks if this block is passable.
      * <p>
      * A block is passable if it has no colliding parts that would prevent
@@ -553,6 +635,17 @@ public interface Block extends Metadatable {
     RayTraceResult rayTrace(@NotNull Location start, @NotNull Vector direction, double maxDistance, @NotNull FluidCollisionMode fluidCollisionMode);
 
     /**
+     * 获取此方块的近似的碰撞箱.
+     * <p>
+     * 返回的碰撞箱不是完全精确的，因为某些方块({@link org.bukkit.block.data.type.Stairs})的碰撞箱是由多个碰撞箱组合而成的.
+     * <p>
+     * 此外，返回的碰撞箱可能与实际的碰撞形状不完全相同(例如仙人掌，它具有十六分之十五的碰撞边界)
+     * <p>
+     * 如果这个方块没有碰撞箱(如空气)则会返回一个空的BoundingBox
+     * <p>
+     * (译者注: 没有接触过BoundingBox，翻译需要改进)
+     * <p>
+     * 原文:
      * Gets the approximate bounding box for this block.
      * <p>
      * This isn't exact as some blocks {@link org.bukkit.block.data.type.Stairs}
